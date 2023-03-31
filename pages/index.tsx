@@ -3,6 +3,7 @@ import imgAvatar from "@/src/assets/avatar.webp";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import axios from "axios";
 import { Conversation } from "@/src/types/conversation";
+import Link from "next/link";
 
 interface HomeProps {
   conversations: Conversation[];
@@ -20,18 +21,20 @@ export default function Home({ conversations }: HomeProps) {
             year: "numeric",
           });
           return (
-            <li
+            <Link
               key={conversation.id}
-              className="my-4 p-2 flex items-center gap-20 border-2 border-gray-200 rounded-lg hover:border-gray-500"
+              href={`/conversation/${conversation.id}/${conversation.recipientId}`}
             >
-              <Avatar img={imgAvatar} text="AJ" />
-              <div className="flex flex-col gap-y-2">
-                <h2 className="text-3xl font-bold">
-                  {conversation.recipientNickname}
-                </h2>
-                <p className="text-gray-400">{dateFormat}</p>
-              </div>
-            </li>
+              <li className="my-4 p-2 flex items-center gap-20 border-2 border-gray-300 rounded-lg hover:border-orange-400">
+                <Avatar img={imgAvatar} text="AJ" />
+                <div className="flex flex-col gap-y-2">
+                  <h2 className="text-3xl font-bold">
+                    {conversation.recipientNickname}
+                  </h2>
+                  <p className="text-gray-400">{dateFormat}</p>
+                </div>
+              </li>
+            </Link>
           );
         })}
       </ul>
