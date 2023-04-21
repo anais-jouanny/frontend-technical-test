@@ -7,7 +7,11 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "icon-send": "url('../public/send.png')",
+      },
+    },
   },
   plugins: [],
 };
