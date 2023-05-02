@@ -1,19 +1,20 @@
-import { Message } from "@/src/types/message";
 import { User } from "@/src/types/user";
 import axios from "axios";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { FC, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import MessageItem from "@/src/components/Message";
+import { Message } from "@/src/types/message";
 
 // A récupérer :
 // Messages ayant le conversationID de l'URL
 // Information User ayant le Nickname de l'URL
 
-// Todo :
-// passer le slug en props
-// mettre les messages en state local (tous ou juste nouveaux)
-// clear input
+// A Checker :
+// {" "} dans les <p>
+// les images apparaissent une fois sur deux
+// longueur du composant
 
 interface ConversationProps {
   messages: Message[];
@@ -32,9 +33,10 @@ const Conversation: FC<ConversationProps> = ({
   me,
   convId,
 }) => {
+  // state
   const [allMessages, setAllMessages] = useState(messages);
 
-  // Bonne pratique d'inialiser ici ?
+  // date
   let dateFormat = "";
 
   if (allMessages.length > 0) {
@@ -49,6 +51,7 @@ const Conversation: FC<ConversationProps> = ({
     });
   }
 
+  // message form
   const { register, handleSubmit } = useForm<InputProps>();
 
   const submit = (data: any, e: any) => {
@@ -99,32 +102,15 @@ const Conversation: FC<ConversationProps> = ({
       </div>
 
       {allMessages.length > 0 ? (
-        <ul className="">
+        <ul>
           {allMessages.map((message) => {
             return (
-              <li
+              <MessageItem
                 key={message.id}
-                className={`m-1 flex flex-col ${
-                  message.authorId === 1
-                    ? "items-end text-right"
-                    : "items-start"
-                }`}
-              >
-                <p className="text-slate-400">
-                  {message.authorId !== 1
-                    ? correspondent.nickname
-                    : `Vous : ${me.nickname}`}
-                </p>
-                <p
-                  className={`p-3 rounded-lg ${
-                    message.authorId === 1
-                      ? "bg-cyan-400 text-white"
-                      : "bg-slate-300"
-                  }`}
-                >
-                  {message.body}
-                </p>
-              </li>
+                message={message}
+                correspondent={correspondent}
+                me={me}
+              />
             );
           })}
         </ul>
@@ -155,7 +141,7 @@ export const getServerSideProps: GetServerSideProps<ConversationProps> = async (
 ) => {
   const slug = context.params?.slug;
 
-  // plus safe que if(slug)
+  // safer than if(slug)
   if (typeof slug === "object") {
     let messages = await axios
       .get(`http://localhost:3005/messages/${slug[0]}`)
