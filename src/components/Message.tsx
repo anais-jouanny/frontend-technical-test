@@ -13,7 +13,6 @@ interface MessageItemProps {
 
 function MessageItem({ message, correspondent, me }: MessageItemProps) {
   const [hasClickedOnBin, setHasClickedOnBin] = useState(false);
-  console.log(message);
 
   // delete message
   const handleDeleteClick = () => {
@@ -25,6 +24,7 @@ function MessageItem({ message, correspondent, me }: MessageItemProps) {
   };
 
   const handleYesClick = () => {
+    console.log(message);
     axios
       .delete(`http://localhost:3005/message/${message.id}`)
       .then(() => {
@@ -32,6 +32,7 @@ function MessageItem({ message, correspondent, me }: MessageItemProps) {
       })
       .catch((error) => {
         console.log(error);
+        console.log("erreur");
       })
       .finally(() => {
         setHasClickedOnBin(false);
